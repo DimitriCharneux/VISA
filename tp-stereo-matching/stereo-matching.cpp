@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 Inclure les fichiers d'entete
 -------------------------------------------------------------------------- */
 #include <stdio.h>
+#include <iostream>
 #include <opencv2/core/core.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/highgui/highgui.hpp>
@@ -27,7 +28,7 @@ Inclure les fichiers d'entete
 #include <getopt.h>
 using namespace cv;
 #include "glue.hpp"
-#include "prenom-nom.hpp"
+#include "dimitri-charneux.hpp"
 
 /* --------------------------------------------------------------------------
 Macros
@@ -61,10 +62,54 @@ static CvScalar sColor[4] = {
     {{   0, 255, 255,   0 }}  // Jaune
 };
 
+
+
+/* TEST */
+
+int main(int argc, char **argv) {
+    std::cout << "hello \n" << std::endl;
+	Mat m = Mat::eye(1, 3, CV_64F);
+	m.at<double>(Point(0,0)) = 1;
+    m.at<double>(Point(0,1)) = 2;
+    m.at<double>(Point(0,2)) = 3;
+    Mat res = iviVectorProductMatrix(m);
+    std::cout << res << std::endl;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /* --------------------------------------------------------------------------
 Programme principal
 -------------------------------------------------------------------------- */
-int main(int argc, char **argv) {
+int mainVrai(int argc, char **argv) {
 
     /* ------------------------------------------------------------------
     Variables necessitant une initialisation

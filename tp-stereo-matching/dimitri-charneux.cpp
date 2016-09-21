@@ -25,7 +25,7 @@ Inclure les fichiers d'entete
 #include <opencv2/highgui/highgui.hpp>
 using namespace cv;
 #include "glue.hpp"
-#include "prenom-nom.hpp"
+#include "dimitri-charneux.hpp"
 
 // -----------------------------------------------------------------------
 /// \brief Detecte les coins.
@@ -54,8 +54,18 @@ Mat iviDetectCorners(const Mat& mImage,
 /// @return matrice de produit vectoriel
 // -----------------------------------------------------------------------
 Mat iviVectorProductMatrix(const Mat& v) {
-    // A modifier !
     Mat mVectorProduct = Mat::eye(3, 3, CV_64F);
+    mVectorProduct.at<double>(Point(0,0)) = 0;
+    mVectorProduct.at<double>(Point(0,1)) = -v.at<double>(Point(0,2));
+    mVectorProduct.at<double>(Point(0,2)) = v.at<double>(Point(0,1));
+    
+    mVectorProduct.at<double>(Point(1,0)) = v.at<double>(Point(0,2));
+    mVectorProduct.at<double>(Point(1,1)) = 0;
+    mVectorProduct.at<double>(Point(1,2)) = -v.at<double>(Point(0,0));
+    
+    mVectorProduct.at<double>(Point(2,0)) = -v.at<double>(Point(0,1));
+    mVectorProduct.at<double>(Point(2,1)) = v.at<double>(Point(0,0));
+    mVectorProduct.at<double>(Point(2,2)) = 0;
     // Retour de la matrice
     return mVectorProduct;
 }
@@ -73,9 +83,29 @@ Mat iviFundamentalMatrix(const Mat& mLeftIntrinsic,
                          const Mat& mLeftExtrinsic,
                          const Mat& mRightIntrinsic,
                          const Mat& mRightExtrinsic) {
-    // A modifier !
     // Doit utiliser la fonction iviVectorProductMatrix
     Mat mFundamental = Mat::eye(3, 3, CV_64F);
+    
+    Mat p1 = mLeftIntrinsic * mLeftExtrinsic;
+    Mat p2 = mRightIntrinsic * mRightExtrinsic;
+    
+    Mat ip1 = p1.inv(DECOMP_SVD);
+    Mat H = p2 * ip1;
+    Mat ie1 = mLeftExtrinsic.inv();
+    Mat o1 = ie1.col(2);
+    
+    /*
+    
+    P1 = A1 * E1.ligne(0,2);
+    P2
+    iP1 = P1.inv(SVD);
+    H = P2 * iP1;
+    iE1 = E1.inv();
+    O1 = iE1.col(2);
+    P2*O1;
+    
+    */
+    
     // Retour de la matrice fondamentale
     return mFundamental;
 }
