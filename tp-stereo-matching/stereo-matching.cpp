@@ -66,7 +66,7 @@ static CvScalar sColor[4] = {
 
 /* TEST */
 
-int main(int argc, char **argv) {
+int main2(int argc, char **argv) {
     std::cout << "hello \n" << std::endl;
 	Mat m = Mat::eye(1, 3, CV_64F);
 	m.at<double>(Point(0,0)) = 1;
@@ -78,38 +78,10 @@ int main(int argc, char **argv) {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /* --------------------------------------------------------------------------
 Programme principal
 -------------------------------------------------------------------------- */
-int mainVrai(int argc, char **argv) {
+int main(int argc, char **argv) {
 
     /* ------------------------------------------------------------------
     Variables necessitant une initialisation
