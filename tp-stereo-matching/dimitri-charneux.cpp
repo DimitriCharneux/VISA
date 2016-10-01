@@ -36,25 +36,15 @@
 		// -----------------------------------------------------------------------
 		Mat iviDetectCorners(const Mat& mImage,
 				             int iMaxCorners) {
-			// A modifier !
-			/*double tx = mImage.cols, ty = mImage.rows;
-			Mat mCorners = (Mat_<double>(3,4) <<
-				.25 * tx, .75 * tx, .25 * tx, .75 * tx,
-				.25 * ty, .25 * ty, .75 * ty, .75 * ty,
-				1., 1., 1., 1.
-				);*/
-			// Retour de la matrice
-			vector<Point2f> vCorners;
-
-			goodFeaturesToTrack(mImage, vCorners, iMaxCorners, 0.01, 10);
-
-			Mat mCorners(3, int(vCorners.size()), CV_64F);
-			for (unsigned int i = 0; i < vCorners.size(); i++){
-				mCorners.at<double>(0,i) = (double)vCorners[i].x;
-		 		mCorners.at<double>(1,i) = (double)vCorners[i].y;
+			vector<Point> coins;
+			//0.01 et 10 sont des valeurs utilisés dans la méthode de calcul.
+			goodFeaturesToTrack(mImage, coins, iMaxCorners, 0.01, 10);
+			Mat mCorners(3, coins.size(), CV_64F);
+			for (int i = 0; i < coins.size(); i++){
+				mCorners.at<double>(0,i) = (double)coins[i].x;
+		 		mCorners.at<double>(1,i) = (double)coins[i].y;
 		 		mCorners.at<double>(2,i) = 1.;
 			}
-			// Retour de la matrice
 			return mCorners;
 		}
 
@@ -94,52 +84,17 @@
 				                 const Mat& mLeftExtrinsic,
 				                 const Mat& mRightIntrinsic,
 				                 const Mat& mRightExtrinsic) {
-			// Doit utiliser la fonction iviVectorProductMatrix
-		
 			Mat mFundamental = Mat::eye(3, 3, CV_64F);
-
-			Mat reduc = (Mat_<double>(3,4) <<
+			Mat r = (Mat_<double>(3,4) <<
 				1.0, 0.0, 0.0, 0.0,
 				0.0, 1.0, 0.0, 0.0,
 				0.0, 0.0, 1.0, 0.0
 				);
-			Mat p1 = mLeftIntrinsic * reduc * mLeftExtrinsic;
-			Mat p2 = mRightIntrinsic * reduc * mRightExtrinsic;
-
+			Mat p1 = mLeftIntrinsic * r * mLeftExtrinsic;
+			Mat p2 = mRightIntrinsic * r * mRightExtrinsic;
 			Mat iE1 = mLeftExtrinsic.inv();
 			Mat o1 = iE1.col(3);
-
 			mFundamental = iviVectorProductMatrix(p2 * o1) * p2 * p1.inv(DECOMP_SVD);
-
-		
-		
-		
-		
-		
-		
-			/*Mat mFundamental = Mat::eye(3, 3, CV_64F);
-		
-			Mat p1 = mLeftIntrinsic * mLeftExtrinsic;
-			Mat p2 = mRightIntrinsic * mRightExtrinsic;
-		
-			Mat ip1 = p1.inv(DECOMP_SVD);
-			Mat H = p2 * ip1;
-			Mat ie1 = mLeftExtrinsic.inv();
-			Mat o1 = ie1.col(2);
-		
-			/*
-		
-			P1 = A1 * E1.ligne(0,2);
-			P2
-			iP1 = P1.inv(SVD);
-			H = P2 * iP1;
-			iE1 = E1.inv();
-			O1 = iE1.col(2);
-			P2*O1;
-		
-			*/
-		
-			// Retour de la matrice fondamentale
 			return mFundamental;
 		}
 
