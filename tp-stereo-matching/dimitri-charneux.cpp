@@ -67,7 +67,6 @@
 			mVectorProduct.at<double>(Point(2,0)) = -v.at<double>(Point(0,1));
 			mVectorProduct.at<double>(Point(2,1)) = v.at<double>(Point(0,0));
 			mVectorProduct.at<double>(Point(2,2)) = 0;
-			// Retour de la matrice
 			return mVectorProduct;
 		}
 
@@ -110,11 +109,30 @@
 		Mat iviDistancesMatrix(const Mat& m2DLeftCorners,
 				               const Mat& m2DRightCorners,
 				               const Mat& mFundamental) {
-			// A modifier !
-			Mat mDistances = Mat();
-			// Retour de la matrice fondamentale
+				               
+    		Mat mDistances = Mat(m2DLeftCorners.cols, m2DRightCorners.cols, CV_64F);
+			for(int i=0; i<m2DLeftCorners.cols; i++){
+				for(int j=0; j<m2DRightCorners.cols; j++){
+				    Mat m1 = m2DLeftCorners.col(i);
+				    Mat m2 = m2DRightCorners.col(j);
+				    Mat d2 = mFundamental * m1;
+				    Mat d1 = mFundamental.t() * m2;
+				    double dividende = fabs(d2.at<double>(0,0)*m1.at<double>(0,0) + d2.at<double>(1,0)*m1.at<double>(1,0) + d2.at<double>(2,0));
+				    double diviseur = sqrt(d2.at<double>(0,0)*d2.at<double>(0,0) + d2.at<double>(1,0)*d2.at<double>(1,0));
+				    double dist1 = dividende / diviseur; 
+
+					dividende = fabs(d1.at<double>(0,0)*m2.at<double>(0,0) + d1.at<double>(1,0)*m2.at<double>(1,0) + d1.at<double>(2,0));
+					diviseur = sqrt(d1.at<double>(0,0)*d1.at<double>(0,0) + d1.at<double>(1,0)*d1.at<double>(1,0));
+				    double dist2 = dividende / diviseur;
+				    
+				    mDistances.at<double>(i,j) = dist1 + dist2;
+				}
+			}
+
 			return mDistances;
 		}
+		
+		
 
 		// -----------------------------------------------------------------------
 		/// \brief Initialise et calcule les indices des points homologues.

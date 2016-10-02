@@ -63,21 +63,6 @@ static CvScalar sColor[4] = {
 };
 
 
-
-/* TEST */
-
-int main2(int argc, char **argv) {
-    std::cout << "hello \n" << std::endl;
-	Mat m = Mat::eye(1, 3, CV_64F);
-	m.at<double>(Point(0,0)) = 1;
-    m.at<double>(Point(0,1)) = 2;
-    m.at<double>(Point(0,2)) = 3;
-    Mat res = iviVectorProductMatrix(m);
-    std::cout << res << std::endl;
-}
-
-
-
 /* --------------------------------------------------------------------------
 Programme principal
 -------------------------------------------------------------------------- */
