@@ -43,8 +43,7 @@ function graph()
     end
 
     plot2d(x,y3,style=color("red"));
-    legends(['Basse';'Moyenne';'Élevee'],[2,3,5],3);
-    
+//    legends(['Basse';'Moyenne';'Élevee'],[2,3,5],3);  
     q3 = y1;
     for i=1:40
         if q3(i) < y2(i)
@@ -54,6 +53,7 @@ function graph()
     
     subplot(2,1,2);
     plot2d(x,q3,style=color("black"));
+    rect=[0,0,40,1];
     xlabel("Température (°C)");
     legends('Basse ou Moyenne',1,3);
     
@@ -62,4 +62,24 @@ function graph()
     printf("Moyenne : %f\n", y2(16));
     printf("Elevée : %f\n", y3(16));
 
+endfunction
+
+
+function res = min(g1, g2)
+    res = g1;
+    for i=1:length(res)
+        if res(i) > g2(i)
+            res(i) = g2(i)
+        end
+    end
+endfunction
+
+
+function res = max(g1, g2)
+    res = g1;
+    for i=1:length(res)
+        if res(i) < g2(i)
+            res(i) = g2(i)
+        end
+    end
 endfunction
