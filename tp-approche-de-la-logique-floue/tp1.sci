@@ -1,46 +1,15 @@
-function graph()
+function ex12()
     xlabel("Température (°C)");
     x=1:40
-    y1=1:40
-    for i=1:10
-        y1(i) = 1;
-    end
-    for i=11:20
-        y1(i) = 1 - (i-10)/10;
-    end
-    for i=21:40
-        y1(i) = 0;
-    end
+    y1 = basse();
     subplot(2,1,1);
     plot2d(x,y1,style=color("blue"));
 
 
-    y2=1:40
-    for i=1:10
-        y2(i) = 0;
-    end
-    for i=11:20
-        y2(i) =(i-10)/10;
-    end
-    for i=21:30
-        y2(i) = 1 - (i-20)/10;
-    end
-    for i=31:40
-        y2(i) = 0;
-    end
+    y2 = moyenne();
     plot2d(x,y2,style=color("green"));
 
-    
-    y3=1:40
-    for i=1:20
-        y3(i) = 0;
-    end
-    for i=21:30
-        y3(i) =(i-20)/10;
-    end
-    for i=31:40
-        y3(i) = 1;
-    end
+    y3 = haute();
 
     plot2d(x,y3,style=color("red"));
 //    legends(['Basse';'Moyenne';'Élevee'],[2,3,5],3);  
@@ -53,9 +22,6 @@ function graph()
     
     subplot(2,1,2);
     plot2d(x,q3,style=color("black"));
-    rect=[0,0,40,1];
-    xlabel("Température (°C)");
-    legends('Basse ou Moyenne',1,3);
     
     printf("Question 2 : valeur sous-ensemble à 16°C\n");
     printf("Basse : %f\n", y1(16));
@@ -64,6 +30,85 @@ function graph()
 
 endfunction
 
+function ex3()
+    xlabel("Puissance de chauffe");
+    x = 1:15;
+    y1 = basse();
+    chauffe = wattChaleur();
+    subplot(2,1,1);
+    plot2d(x,chauffe,style=color("blue"));
+
+    appartenanceY12 = y1(12);
+    printf("limite : %f\n", appartenanceY12);
+    limite = remplissage(appartenanceY12, 15);
+    mamdani = min(chauffe, limite);
+    subplot(2,1,2);
+    plot2d(x,mamdani,style=color("blue"));
+
+endfunction
+
+function res = remplissage (valeur, tabSize)
+    res=1:tabSize
+    for i=1:tabSize
+        res(i) = valeur;
+    end
+endfunction
+
+
+function res = basse ()
+    res=1:40
+    for i=1:10
+        res(i) = 1;
+    end
+    for i=11:20
+        res(i) = 1 - (i-10)/10;
+    end
+    for i=21:40
+        res(i) = 0;
+    end
+endfunction
+
+function res = moyenne ()
+    res=1:40
+    for i=1:10
+        res(i) = 0;
+    end
+    for i=11:20
+        res(i) =(i-10)/10;
+    end
+    for i=21:30
+        res(i) = 1 - (i-20)/10;
+    end
+    for i=31:40
+        res(i) = 0;
+    end
+endfunction
+
+function res = haute ()
+    res=1:40
+    for i=1:20
+        res(i) = 0;
+    end
+    for i=21:30
+        res(i) =(i-20)/10;
+    end
+    for i=31:40
+        res(i) = 1;
+    end
+endfunction
+
+function res = wattChaleur ()
+    res=1:15
+    for i=1:8
+        res(i) = 0;
+    end
+    for i=9:10
+        res(i) =((i-8)/2);
+    end
+    for i=11:15
+        res(i) = 1;
+    end
+endfunction
 
 function res = min(g1, g2)
     res = g1;
