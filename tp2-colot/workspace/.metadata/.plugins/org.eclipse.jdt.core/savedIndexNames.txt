@@ -1,0 +1,3 @@
+INDEX VERSION 1.126+/home/m2ivi/charneux/Documents/VISA/tp2-colot/workspace/.metadata/.plugins/org.eclipse.jdt.core
+2078442509.index
+3082493019.index

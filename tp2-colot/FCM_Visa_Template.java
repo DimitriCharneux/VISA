@@ -58,7 +58,7 @@ public int rand(int min, int max)
 		int height = ip.getHeight();
  		
 
-		impseg=NewImage.createImage("Image segmentée par FCM",width,height,1,24,0);
+		impseg=NewImage.createImage("Image segmentee par FCM",width,height,1,24,0);
 		ipseg = impseg.getProcessor();
 		impseg.show();
 
@@ -74,13 +74,13 @@ public int rand(int min, int max)
 		demande =JOptionPane.showInputDialog("Valeur de m : ");
 		double m =Double.parseDouble(demande);
 
-		demande =JOptionPane.showInputDialog("Nombre itération max : ");
+		demande =JOptionPane.showInputDialog("Nombre iteration max : ");
 		int itermax =Integer.parseInt(demande);
 
-		demande =JOptionPane.showInputDialog("Valeur du seuil de stabilité : ");
+		demande =JOptionPane.showInputDialog("Valeur du seuil de stabilite : ");
 		valeur_seuil =Double.parseDouble(demande);
 
-		demande =JOptionPane.showInputDialog("Randomisation améliorée ? ");
+		demande =JOptionPane.showInputDialog("Randomisation amelioree ? ");
 		int valeur=Integer.parseInt(demande);
 
 
@@ -103,7 +103,7 @@ public int rand(int min, int max)
 		  figJ[i]=0;
 		}
 
-		// Récupération des données images 
+		// Recuperation des donnees images 
 		l = 0;
 		for(i = 0; i < width; i++)
 		{
@@ -134,7 +134,7 @@ public int rand(int min, int max)
 		int epsilonx,epsilony;
 
 
-		// Initialisation des centroïdes (aléatoirement )
+		// Initialisation des centroides (aleatoirement )
 
 		for(i=0;i<nbclasses;i++)
 		{
@@ -165,7 +165,7 @@ public int rand(int min, int max)
 			}
 		}
 
-		// Initialisation des degrés d'appartenance
+		// Initialisation des degres d'appartenance
 		//A COMPLETER
 
 		////////////////////////////////////////////////////////////
@@ -187,14 +187,14 @@ public int rand(int min, int max)
 
 			
 		// Update  the matrix of centroids
-			// Compute Dmat, the matrix of distances (euclidian) with the centroïds
+			// Compute Dmat, the matrix of distances (euclidian) with the centroeds
 
 			// Calculate difference between the previous partition and the new partition (performance index)
 
 			iter++;
 		////////////////////////////////////////////////////////
 	
-		// Affichage de l'image segmentée 
+		// Affichage de l'image segmentee 
 		double[] mat_array=new double[nbclasses];
 		l = 0;
 		for(i=0;i<width;i++)
