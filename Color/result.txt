@@ -1,0 +1,19 @@
+Ex1 :
+	Q1 :
+		différence cas1_luminance et cas1_dalton26 : Brightness -20
+		difference cas2_luminance et cas2_dalton7 : Brightness -80
+		difference cas3_luminance et cas3_dalton3 : Brightness -30
+		
+	Q2 :
+		Expliquer dans rapport qu'on mets un if pour ne pas dépasser 256.	
+	
+	Q3 :
+		cas 1 : 20
+		cas 2 : 80
+		cas 3 : 30
+		
+Ex2 : 
+	Q1 :
+		Saturation x2.04
+	Q2 :
+		Saturation x1.93
