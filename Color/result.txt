@@ -20,3 +20,8 @@ Ex2 :
 	Q3 : 
 		x2.04
 		x0.55
+		Les différences sont du au spectres colorimétrique du RGB qui est plus petit que celui HSB.
+		
+Ex3
+	ajout de rouge entre 80 et 110.
+	Impossible de retrouver le vert avec add, on retrouve la même image avec color rotation.
