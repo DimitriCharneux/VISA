@@ -9,8 +9,6 @@ macro "ex2Q3" {
 image = getImageID();
 
 valeurRed = getNumber ("quelle valeur de rouge ajouter à la teinte ?",valeurRed);
-valeurGreen = getNumber ("quelle valeur de vert ajouter à la teinte ?",valeurGreen);
-valeurBlue = getNumber ("quelle valeur de bleu ajouter à la teinte ?",valeurBlue);
 
 Dialog.create("Debut");
 Dialog.addMessage(" Cliquer sur OK pour commencer le traitement ");
@@ -26,12 +24,6 @@ run("Split Channels");
 
 selectWindow(titre + " (HSB) (red)");
 run("Add...", "value=" + valeurRed);
-
-selectWindow(titre + " (HSB) (green)");
-run("Add...", "value=" + valeurGreen);
-
-selectWindow(titre + " (HSB) (blue)");
-run("Add...", "value=" + valeurBlue);
 
 run("Merge Channels...","c1=["+titre+" (HSB) (red)] c2=["+titre+" (HSB) (green)] c3=["+titre+" (HSB) (blue)] ignore");
 run("Color Space Converter","from=HSB to=RGB white=D65");
