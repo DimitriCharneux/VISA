@@ -16,7 +16,7 @@ Ex2 :
 	Q1 :
 		Saturation x2.04
 	Q2 :
-		Saturation x1.93
+		Saturation x0.55
 	Q3 : 
 		x2.04
 		x0.55

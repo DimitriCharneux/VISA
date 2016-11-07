@@ -3,7 +3,7 @@
 // Date: 14/09/2011
 // Author: D. Charneux
  
-macro "ex2Q3" {
+macro "multiplication saturation" {
 
 // recuperation du ID de l'image
 image = getImageID();
@@ -13,7 +13,6 @@ valeur = getNumber ("quelle multiplication de saturation",valeur);
 Dialog.create("Debut");
 Dialog.addMessage(" Cliquer sur OK pour commencer le traitement ");
 Dialog.show();
-
 
 setBatchMode(true);
 
@@ -26,12 +25,6 @@ run("Split Channels");
 selectWindow(titre + " (HSB) (green)");
 run("Multiply...", "value=" + valeur);
 
-//selectWindow(titre + " (HSB) (red)");
-/*run("Multiply...", "value=" + valeur);*/
-
-/*selectWindow(titre + " (HSB) (blue)");*/
-/*run("Multiply...", "value=" + valeur);*/
-
 run("Merge Channels...","c1=["+titre+" (HSB) (red)] c2=["+titre+" (HSB) (green)] c3=["+titre+" (HSB) (blue)] ignore");
 run("Color Space Converter","from=HSB to=RGB white=D65");
 
@@ -40,6 +33,5 @@ setBatchMode(false);
 Dialog.create("Fin");
 Dialog.addMessage(" Cliquer sur OK pour terminer le traitement");
 Dialog.show();
-
 
 }

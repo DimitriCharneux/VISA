@@ -3,7 +3,7 @@
 // Date: 14/09/2011
 // Author: D. Charneux
  
-macro "ex2Q3" {
+macro "modification teinte" {
 
 // recuperation du ID de l'image
 image = getImageID();
@@ -14,7 +14,6 @@ Dialog.create("Debut");
 Dialog.addMessage(" Cliquer sur OK pour commencer le traitement ");
 Dialog.show();
 
-
 setBatchMode(true);
 
 titre=getTitle();
@@ -22,6 +21,7 @@ titre=getTitle();
 run("Color Space Converter","from=RGB to=HSB white=D65");
 run("Split Channels");
 
+valeurRed = (valeurRed * 256 )/360;
 selectWindow(titre + " (HSB) (red)");
 run("Add...", "value=" + valeurRed);
 
@@ -33,6 +33,4 @@ setBatchMode(false);
 Dialog.create("Fin");
 Dialog.addMessage(" Cliquer sur OK pour terminer le traitement");
 Dialog.show();
-
-
 }
