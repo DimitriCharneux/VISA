@@ -1,0 +1,36 @@
+// Ex2 Q3.
+// Version: 0.1
+// Date: 14/09/2011
+// Author: D. Charneux
+ 
+macro "modification teinte" {
+
+// recuperation du ID de l'image
+image = getImageID();
+
+valeurRed = getNumber ("quelle valeur de rouge ajouter à la teinte ?",valeurRed);
+
+Dialog.create("Debut");
+Dialog.addMessage(" Cliquer sur OK pour commencer le traitement ");
+Dialog.show();
+
+setBatchMode(true);
+
+titre=getTitle();
+
+run("Color Space Converter","from=RGB to=HSB white=D65");
+run("Split Channels");
+
+valeurRed = (valeurRed * 256 )/360;
+selectWindow(titre + " (HSB) (red)");
+run("Add...", "value=" + valeurRed);
+
+run("Merge Channels...","c1=["+titre+" (HSB) (red)] c2=["+titre+" (HSB) (green)] c3=["+titre+" (HSB) (blue)] ignore");
+run("Color Space Converter","from=HSB to=RGB white=D65");
+
+setBatchMode(false);
+
+Dialog.create("Fin");
+Dialog.addMessage(" Cliquer sur OK pour terminer le traitement");
+Dialog.show();
+}
