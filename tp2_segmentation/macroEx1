@@ -1,0 +1,99 @@
+// Ex2 Q3.
+// Version: 0.1
+// Date: 14/09/2011
+// Author: D. Charneux
+ 
+macro "segmentation image" {
+
+// recuperation du ID de l'image
+image = getImageID();
+
+nbClass = getNumber ("quelle est le nombre de classes ?",nbClass);
+
+setBatchMode(true);
+
+titre=getTitle();
+
+run("k-means Clustering ...", "number_of_clusters="+nbClass+" cluster_center_tolerance=0.00010000 enable_randomization_seed randomization_seed=48 show_clusters_as_centroid_value enable_clustering_animation");
+
+width = getWidth();
+height = getHeight();
+
+tabClass = newArray(nbClass);
+cptTabClass = 0;
+
+selectWindow("Cluster centroid values");
+
+//parcours chaque pixel, si la couleur du pixel est dans le tableau, 
+//on ne fait rien, si elle n'y est pas, on l'ajoute;
+for(i = 0; i<width; i++){
+	for(j=0; j<height; j++){
+		trouve = 0;
+		pixel = getPixel(i,j);
+		
+		for(k = 0; k<cptTabClass; k++){
+			if(pixel == tabClass[k]){
+				trouve = 1;
+			}
+		}
+		
+		if(trouve == 0){
+			tabClass[cptTabClass] = pixel;
+			cptTabClass++;
+		}
+	}
+}
+
+chemin = getString ("quelle est le nom de l'image à segmenter ?",chemin);
+open("./images_2016/" + chemin);
+selectWindow(chemin);
+run("Duplicate...", "image segmente");
+image_modifie = getImageID();
+
+width = getWidth();
+height = getHeight();
+
+for(i = 0; i<width; i++){
+	for(j=0; j<height; j++){
+		pixel = getPixel(i,j);
+
+		Rtab = (tabClass[0] & 0xff0000) >> 16;
+		Gtab = (tabClass[0] & 0x00ff00) >> 8;
+		Btab = (tabClass[0] & 0x0000ff) ;
+			
+		R = (pixel & 0xff0000) >> 16;
+		G = (pixel & 0x00ff00) >> 8;
+		B = (pixel & 0x0000ff) ;
+		
+		min = pow(Rtab - R, 2)+pow(Gtab - G,2)+pow(Btab - B, 2);
+		kmin = 0;
+		for(k = 1; k<nbClass; k++){
+			Rtab = (tabClass[k] & 0xff0000) >> 16;
+			Gtab = (tabClass[k] & 0x00ff00) >> 8;
+			Btab = (tabClass[k] & 0x0000ff) ;
+			
+			R = (pixel & 0xff0000) >> 16;
+			G = (pixel & 0x00ff00) >> 8;
+			B = (pixel & 0x0000ff) ;
+			
+			//calcule de la difference
+			difference = pow(Rtab - R, 2)+pow(Gtab - G,2)+pow(Btab - B, 2);
+		
+		
+			if(min > difference){
+				min = difference;
+				kmin = k;
+			}
+		}
+		selectImage (image_modifie);
+		setPixel(i,j,cptTabClass[kmin]);
+	}
+}
+
+
+setBatchMode(false);
+
+Dialog.create("Fin");
+Dialog.addMessage(" Cliquer sur OK pour terminer le traitement");
+Dialog.show();
+}
