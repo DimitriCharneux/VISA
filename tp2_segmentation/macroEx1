@@ -50,7 +50,7 @@ for(i = 0; i<width; i++){
 
 
 //Pour entrer soit même l'image à analyser
-chemin = getString ("quelle est le nom de l'image à segmenter ?",chemin);
+chemin = getString ("quelle est le nom de l'image à segmenter ? (exemple : cas_4_dalton29.bmp)",chemin);
 //chemin = "cas_3_dalton3.bmp"
 open("./images_2016/" + chemin);
 selectWindow(chemin);
