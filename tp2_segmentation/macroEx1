@@ -14,6 +14,11 @@ setBatchMode(true);
 
 titre=getTitle();
 
+espace = getString ("Dans quelle espace voulez-vous segmenter l'image ? (RGB ou HSB)",espace);
+
+run("Duplicate...", titre);
+run("Color Space Converter","from=RGB to="+espace+" white=D65");
+
 //segmentation de l'image avec k-means en utilisant le nombre de classes indiqué par l'utilisateur.
 run("k-means Clustering ...", "number_of_clusters="+nbClass+" cluster_center_tolerance=0.00010000 enable_randomization_seed randomization_seed=48 show_clusters_as_centroid_value enable_clustering_animation");
 
@@ -57,6 +62,8 @@ selectWindow(chemin);
 run("Duplicate...", "image segmente");
 image_modifie = getImageID();
 
+run("Color Space Converter","from=RGB to="+espace+" white=D65");
+
 width = getWidth();
 height = getHeight();
 
@@ -99,7 +106,7 @@ for(i = 0; i<width; i++){
 		setPixel(i,j,tabClass[kmin]);
 	}
 }
-
+run("Color Space Converter","from="+espace+" to=RGB white=D65");
 
 setBatchMode(false);
 
