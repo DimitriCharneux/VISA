@@ -1,0 +1,21 @@
+// Ex4.
+// Date: 22/11/2016
+// Author: D. Charneux
+ 
+macro "segmentation_pca" {
+	setBatchMode(true);
+	titre = getTitle();
+	selectWindow(titre);
+	run("Split Channels");
+	run("Images to Stack", "method=[Copy (center)] name=Stack title=cas use");
+	run("PCA ");
+	selectWindow("PCA of Stack");
+	run("16-bit");
+	run("Stack to RGB");
+	run("k-means Clustering", "number=3 cluster=0.00010000 enable randomization=48 show");	
+	setBatchMode(false);
+
+	Dialog.create("Fin");
+	Dialog.addMessage(" Cliquer sur OK pour terminer le traitement");
+	Dialog.show();
+}

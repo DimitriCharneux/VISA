@@ -14,11 +14,19 @@ setBatchMode(true);
 
 titre=getTitle();
 
+espace = getString ("Dans quelle espace voulez-vous segmenter l'image ? (RGB ou HSB)",espace);
+
+run("Duplicate...", titre);
+run("Color Space Converter","from=RGB to="+espace+" white=D65");
+
+//segmentation de l'image avec k-means en utilisant le nombre de classes indiqué par l'utilisateur.
 run("k-means Clustering ...", "number_of_clusters="+nbClass+" cluster_center_tolerance=0.00010000 enable_randomization_seed randomization_seed=48 show_clusters_as_centroid_value enable_clustering_animation");
 
+//Récupération de la taille de l'image.
 width = getWidth();
 height = getHeight();
 
+//Ajout du tableau qui va contenir les différentes 'nbClass' couleur a segmenter.
 tabClass = newArray(nbClass);
 cptTabClass = 0;
 
@@ -26,6 +34,7 @@ selectWindow("Cluster centroid values");
 
 //parcours chaque pixel, si la couleur du pixel est dans le tableau, 
 //on ne fait rien, si elle n'y est pas, on l'ajoute;
+//on ne sépare le pixel en trois couleur, il sera séparé par la suite.
 for(i = 0; i<width; i++){
 	for(j=0; j<height; j++){
 		trouve = 0;
@@ -44,15 +53,22 @@ for(i = 0; i<width; i++){
 	}
 }
 
-chemin = getString ("quelle est le nom de l'image à segmenter ?",chemin);
+
+//Pour entrer soit même l'image à analyser
+chemin = getString ("quelle est le nom de l'image à segmenter ? (exemple : cas_4_dalton29.bmp)",chemin);
+//chemin = "cas_3_dalton3.bmp"
 open("./images_2016/" + chemin);
 selectWindow(chemin);
 run("Duplicate...", "image segmente");
 image_modifie = getImageID();
 
+run("Color Space Converter","from=RGB to="+espace+" white=D65");
+
 width = getWidth();
 height = getHeight();
 
+
+//Cette boucle va regarder pour chaque pixel la classe pour lequel il est le plus proche et va le remplacer par cette  classe.
 for(i = 0; i<width; i++){
 	for(j=0; j<height; j++){
 		pixel = getPixel(i,j);
@@ -65,6 +81,7 @@ for(i = 0; i<width; i++){
 		G = (pixel & 0x00ff00) >> 8;
 		B = (pixel & 0x0000ff) ;
 		
+		//calcule de la difference avec la première classe, permet de remplir min et kmin avant la boucle.
 		min = pow(Rtab - R, 2)+pow(Gtab - G,2)+pow(Btab - B, 2);
 		kmin = 0;
 		for(k = 1; k<nbClass; k++){
@@ -76,7 +93,7 @@ for(i = 0; i<width; i++){
 			G = (pixel & 0x00ff00) >> 8;
 			B = (pixel & 0x0000ff) ;
 			
-			//calcule de la difference
+			//calcule de la difference, le carré sert à enlever les valeur negatif pour que x et -x soit la même distance.
 			difference = pow(Rtab - R, 2)+pow(Gtab - G,2)+pow(Btab - B, 2);
 		
 		
@@ -86,10 +103,10 @@ for(i = 0; i<width; i++){
 			}
 		}
 		selectImage (image_modifie);
-		setPixel(i,j,cptTabClass[kmin]);
+		setPixel(i,j,tabClass[kmin]);
 	}
 }
-
+run("Color Space Converter","from="+espace+" to=RGB white=D65");
 
 setBatchMode(false);
 
