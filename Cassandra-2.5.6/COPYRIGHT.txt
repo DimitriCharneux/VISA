@@ -1,0 +1,10 @@
+                  Cassandra 2.5.6
+
+              3D scientific data viewer
+    http://www.artenum.com/EN/Products-Cassandra.html
+
+Copyright (c) Artenum SARL, 24, rue Louis Blanc, 75010, PARIS
+      2005-2013,  Paris, France, http://www.artenum.com
+
+
+Done in Paris, France, 2013/11/27. 

@@ -1,0 +1,32 @@
+#!/bin/bash
+
+#############################################################
+# DO NOT EDIT THIS SECTION                                  #
+# It builds the absolute path whatever if Cassandra is     #
+# called locally or not.                                    #
+#############################################################
+export PATH=$PATH:/user/bin/
+CMD_LINE=`dirname $0`
+TEST="_"${CMD_LINE:0:1}
+
+START_POINT=$PWD
+if [ ${TEST} == "_/" ]; then
+   HERE=$CMD_LINE
+else
+   HERE=$START_POINT"/"$CMD_LINE
+fi
+
+# build up the absolute path for the input script
+ARGUMENT=$1
+if [ "_"${ARGUMENT} == "_" ]; then
+   echo "No file"
+   ARGUMENT_1=""
+elif [ "_"${ARGUMENT:0:1} == "_/" ]; then
+   ARGUMENT_1=$ARGUMENT
+else
+   ARGUMENT_1=$START_POINT"/"$ARGUMENT
+fi
+
+export CASSANDRA_HOME=${HERE}
+
+cd $CASSANDRA_HOME

@@ -1,1 +1,7 @@
 Attention, dans scilab, hij représente H(j,i) page 6 truc dzang
+
+
+probleme libawt : 
+utiliser openjdk
+LD_LIBRARY_PATH au lieu de PATH
+
