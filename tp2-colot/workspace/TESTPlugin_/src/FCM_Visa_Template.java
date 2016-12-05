@@ -11,6 +11,15 @@ import java.util.Random;
 
 import javax.swing.JOptionPane;
 
+//paramètres utilisé :
+/*
+ * nbClasses 6
+ * m 2
+ * nb ite 10
+ * seuil 0.2
+ * random 0
+ * 
+ * */
 public class FCM_Visa_Template implements PlugIn {
 
 	class Vec {
@@ -146,6 +155,22 @@ public class FCM_Visa_Template implements PlugIn {
 
 		// Initialisation des degres d'appartenance
 		//TODO A COMPLETER
+		
+		for (i = 0; i < kmax; i++) {
+			for (j = 0; j < nbpixels; j++) {
+				float membership = 0.0f;
+				for (k = 0; k < kmax; k++) {
+
+					if (Dprev[k][j] > 0) {
+						membership += Math.pow(Dprev[i][j] / Dprev[k][j],
+								2.0 / (m - 1));
+					} else {
+						membership += 1;
+					}
+				}
+				Uprev[i][j] = 1 / membership;
+			}
+		}
 
 		// //////////////////////////////////////////////////////////
 		// FIN INITIALISATION FCM
@@ -164,6 +189,79 @@ public class FCM_Visa_Template implements PlugIn {
 			// Update the matrix of centroids
 			// Compute Dmat, the matrix of distances (euclidian) with the
 			// centroeds
+			
+			for (k = 0; k < kmax; k++) {
+				double[] num = new double[3];
+				double den = 0.0;
+
+				num[0] = 0.0;
+				num[1] = 0.0;
+				num[2] = 0.0;
+
+				for (l = 0; l < nbpixels; l++) {
+					num[0] += Math.pow(Uprev[k][l], m) * red[l];
+					num[1] += Math.pow(Uprev[k][l], m) * green[l];
+					num[2] += Math.pow(Uprev[k][l], m) * blue[l];
+
+					den += Math.pow(Uprev[k][l], m);
+				}
+
+				if (den > 0) {
+					c[k][0] = num[0] / den;
+					c[k][1] = num[1] / den;
+					c[k][2] = num[2] / den;
+				}
+			}
+
+			// Compute Dmat, the matrix of distances (euclidian) with the
+			// centroids
+			for (j = 0; j < nbpixels; j++) {
+				for (k = 0; k < kmax; k++) {
+					double r2 = Math.pow(red[j] - c[k][0], 2);
+					double g2 = Math.pow(green[j] - c[k][1], 2);
+					double b2 = Math.pow(blue[j] - c[k][2], 2);
+
+					Dmat[k][j] = r2 + g2 + b2;
+				}
+			}
+
+			// < Calcul des degres d'appartenance
+			for (i = 0; i < nbclasses; i++) {
+				for (j = 0; j < nbpixels; j++) {
+					float membership = 0.0f;
+					for (k = 0; k < kmax; k++) {
+
+						if (Dmat[k][j] > 0) {
+							membership += Math.pow(Dmat[i][j] / Dmat[k][j],
+									2.0 / (m - 1));
+						} else {
+							membership += 1;
+						}
+					}
+					Umat[i][j] = 1 / membership;
+				}
+			}
+			// >
+
+			for (i = 0; i < kmax; i++) {
+				for (l = 0; l < nbpixels; l++) {
+					Dprev[i][l] = Dmat[i][l];
+					Uprev[i][l] = Umat[i][l];
+				}
+			}
+
+			// Calculate difference between the previous partition and the new
+			// partition (performance index)
+			for (i = 0; i < nbclasses; i++) {
+				for (l = 0; l < nbpixels; l++) {
+					figJ[iter] = Math.pow(Umat[i][l], m)
+							* Math.pow(Dmat[i][l], 2);
+				}
+			}
+
+			if (iter > 0)
+				stab = figJ[iter] - figJ[iter - 1];
+			
 
 			// Calculate difference between the previous partition and the new
 			// partition (performance index)
