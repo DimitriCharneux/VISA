@@ -20,7 +20,7 @@ import javax.swing.JOptionPane;
  * random 0
  * 
  * */
-public class HCM_Visa_Template implements PlugIn {
+public class PCM_Visa_Template implements PlugIn {
 
 	class Vec {
 		int[] data = new int[3]; // *pointeur sur les composantes*/
@@ -44,7 +44,7 @@ public class HCM_Visa_Template implements PlugIn {
 		ImagePlus imp;
 		ImagePlus impseg;
 		ImagePlus impJ;
-		IJ.showMessage("Algorithme HCM", "If ready, Press OK");
+		IJ.showMessage("Algorithme PCM", "If ready, Press OK");
 		ImagePlus cw;
 
 		imp = WindowManager.getCurrentImage();
@@ -53,7 +53,7 @@ public class HCM_Visa_Template implements PlugIn {
 		int width = ip.getWidth();
 		int height = ip.getHeight();
 
-		impseg = NewImage.createImage("Image segmentee par HCM", width, height,
+		impseg = NewImage.createImage("Image segmentee par PCM", width, height,
 				1, 24, 0);
 		ipseg = impseg.getProcessor();
 		impseg.show();
@@ -109,7 +109,7 @@ public class HCM_Visa_Template implements PlugIn {
 			}
 		}
 		// //////////////////////////////
-		// HCM
+		// PCM
 		// /////////////////////////////
 
 		imax = nbpixels; // nombre de pixels dans l'image
@@ -170,7 +170,7 @@ public class HCM_Visa_Template implements PlugIn {
 		}
 
 		// //////////////////////////////////////////////////////////
-		// FIN INITIALISATION HCM
+		// FIN INITIALISATION PCM
 		// /////////////////////////////////////////////////////////
 
 		// ///////////////////////////////////////////////////////////
@@ -285,12 +285,12 @@ public class HCM_Visa_Template implements PlugIn {
 			xplot[w] = (double) w;
 			yplot[w] = (double) figJ[w];
 		}
-		Plot plot = new Plot("Performance Index (HCM)", "iterations",
+		Plot plot = new Plot("Performance Index (PCM)", "iterations",
 				"J(P) value", xplot, yplot);
 		plot.setLineWidth(2);
 		plot.setColor(Color.blue);
 		plot.show();
-	} // Fin HCM
+	} // Fin PCM
 
 	int indice;
 	double min, max;

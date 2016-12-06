@@ -16,7 +16,7 @@ import javax.swing.JOptionPane;
  * nbClasses 6
  * m 2
  * nb ite 10
- * seuil 0.2
+ * seuil 0.2 à 0.8
  * random 0
  * 
  * */
@@ -213,7 +213,6 @@ public class FCM_Visa_Template implements PlugIn {
 				}
 			}
 
-			// Compute Dmat, the matrix of distances (euclidian) with the
 			// centroids
 			for (j = 0; j < nbpixels; j++) {
 				for (k = 0; k < kmax; k++) {
@@ -225,7 +224,7 @@ public class FCM_Visa_Template implements PlugIn {
 				}
 			}
 
-			// < Calcul des degres d'appartenance
+			//degrees
 			for (i = 0; i < nbclasses; i++) {
 				for (j = 0; j < nbpixels; j++) {
 					float membership = 0.0f;
@@ -241,7 +240,6 @@ public class FCM_Visa_Template implements PlugIn {
 					Umat[i][j] = 1 / membership;
 				}
 			}
-			// >
 
 			for (i = 0; i < kmax; i++) {
 				for (l = 0; l < nbpixels; l++) {
@@ -250,8 +248,6 @@ public class FCM_Visa_Template implements PlugIn {
 				}
 			}
 
-			// Calculate difference between the previous partition and the new
-			// partition (performance index)
 			for (i = 0; i < nbclasses; i++) {
 				for (l = 0; l < nbpixels; l++) {
 					figJ[iter] = Math.pow(Umat[i][l], m)
