@@ -14,13 +14,13 @@ import javax.swing.JOptionPane;
 //paramètres utilisé :
 /*
  * nbClasses 6
- * m 1
+ * m 2
  * nb ite 10
  * seuil 0.3
  * random 0
  * 
  * */
-public class HCM_Visa_Template implements PlugIn {
+public class Dave_Visa_Template implements PlugIn {
 
 	class Vec {
 		int[] data = new int[3]; // *pointeur sur les composantes*/
@@ -44,7 +44,7 @@ public class HCM_Visa_Template implements PlugIn {
 		ImagePlus imp;
 		ImagePlus impseg;
 		ImagePlus impJ;
-		IJ.showMessage("Algorithme HCM", "If ready, Press OK");
+		IJ.showMessage("Algorithme PCM", "If ready, Press OK");
 		ImagePlus cw;
 
 		imp = WindowManager.getCurrentImage();
@@ -53,7 +53,7 @@ public class HCM_Visa_Template implements PlugIn {
 		int width = ip.getWidth();
 		int height = ip.getHeight();
 
-		impseg = NewImage.createImage("Image segmentee par HCM", width, height,
+		impseg = NewImage.createImage("Image segmentee par PCM", width, height,
 				1, 24, 0);
 		ipseg = impseg.getProcessor();
 		impseg.show();
@@ -109,7 +109,7 @@ public class HCM_Visa_Template implements PlugIn {
 			}
 		}
 		// //////////////////////////////
-		// HCM
+		// Dave
 		// /////////////////////////////
 
 		imax = nbpixels; // nombre de pixels dans l'image
@@ -158,19 +158,20 @@ public class HCM_Visa_Template implements PlugIn {
 
 		for (i = 0; i < nbclasses; i++) {
 			for (j = 0; j < nbpixels; j++) {
-				double membership = 1.0;
+				Uprev[i][j] = 0;
 				for (k = 0; k < kmax; k++) {
 
-					if (k != i && Math.pow(Dmat[i][j],2) >= Math.pow(Dmat[k][j],2)) {
-						membership = 0.0;
+					if (Dprev[k][j] != 0) {
+						Uprev[i][j] += Math.pow(Dprev[i][j] / Dprev[k][j], 1 / (m-1));
 					}
 				}
-				Uprev[i][j] = membership;
+				if(Uprev[i][j] >=1)
+					Uprev[i][j] = 1/Uprev[i][j];
 			}
 		}
 
 		// //////////////////////////////////////////////////////////
-		// FIN INITIALISATION HCM
+		// FIN INITIALISATION PCM
 		// /////////////////////////////////////////////////////////
 
 		// ///////////////////////////////////////////////////////////
@@ -222,39 +223,49 @@ public class HCM_Visa_Template implements PlugIn {
 
 			for (i = 0; i < nbclasses; i++) {
 				for (j = 0; j < nbpixels; j++) {
-					double membership = 1.0;
+					double membership = 0.0;
 					for (k = 0; k < kmax; k++) {
-						if (k != i && Math.pow(Dmat[i][j],2) >= Math.pow(Dmat[k][j],2)) {
-							membership = 0.0;
+						if (Dmat[k][j] > 0) {
+							membership += Math.pow(Dmat[i][j]/Dmat[k][j], 2.0/(m-1));
+						} else {
+							membership += 1;
 						}
 					}
-					Umat[i][j] = membership;
+					Umat[i][j] = 1/membership;
 				}
 			}
 
-			figJ[iter] = 0;
-
-			for (i = 0; i < nbclasses; i++) {
-				for (j = 0; j < nbpixels; j++) {
-					figJ[iter] += Math.pow(Umat[i][j], m)
-							* Dmat[i][j];
+			for (j = 0; j < nbpixels; j++) {
+				double membership = 0.0;
+				for (i = 0; i < nbclasses; i++) {
+					membership += Umat[i][j];
 				}
+				Umat[nbclasses - 1][j] = 1 - membership;
 			}
 
-			if (iter > 0)
-				stab = figJ[iter] - figJ[iter - 1];
 
-			// Calculate difference between the previous partition and the new
-			// partition (performance index)
-
-			iter++;
-			
 			for (k = 0; k < kmax; k++) {
 				for (j = 0; j < nbpixels; j++) {
 					Dprev[k][j] = Dmat[k][j];
 					Uprev[k][j] = Umat[k][j];
 				}
 			}
+
+			// Calculate difference between the previous partition and the new
+			// partition (performance index)
+
+			iter++;
+			
+			
+			for (j = 0; j < nbpixels; j++) {
+				for (k = 0; k < kmax; k++) {
+					figJ[iter] = Math.pow(Umat[k][j], m)
+							* Math.pow(Dmat[k][j], 2);
+				}
+			}
+			
+			if (iter > 0)
+				stab = figJ[iter] - figJ[iter - 1];
 			
 			// //////////////////////////////////////////////////////
 
@@ -285,12 +296,12 @@ public class HCM_Visa_Template implements PlugIn {
 			xplot[w] = (double) w;
 			yplot[w] = (double) figJ[w];
 		}
-		Plot plot = new Plot("Performance Index (HCM)", "iterations",
+		Plot plot = new Plot("Performance Index (PCM)", "iterations",
 				"J(P) value", xplot, yplot);
 		plot.setLineWidth(2);
 		plot.setColor(Color.blue);
 		plot.show();
-	} // Fin HCM
+	} // Fin PCM
 
 	int indice;
 	double min, max;
