@@ -17,7 +17,7 @@ import javax.swing.JOptionPane;
  * m 2
  * nb ite 10
  * seuil 0.3
- * random 0
+ * random 1
  * 
  * */
 public class PCM_Visa_Template implements PlugIn {

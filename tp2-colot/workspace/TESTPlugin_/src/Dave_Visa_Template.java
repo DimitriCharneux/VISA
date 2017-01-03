@@ -17,7 +17,7 @@ import javax.swing.JOptionPane;
  * m 2
  * nb ite 10
  * seuil 0.3
- * random 0
+ * random 1
  * 
  * */
 public class Dave_Visa_Template implements PlugIn {
@@ -44,7 +44,7 @@ public class Dave_Visa_Template implements PlugIn {
 		ImagePlus imp;
 		ImagePlus impseg;
 		ImagePlus impJ;
-		IJ.showMessage("Algorithme PCM", "If ready, Press OK");
+		IJ.showMessage("Algorithme Davé", "If ready, Press OK");
 		ImagePlus cw;
 
 		imp = WindowManager.getCurrentImage();
@@ -53,7 +53,7 @@ public class Dave_Visa_Template implements PlugIn {
 		int width = ip.getWidth();
 		int height = ip.getHeight();
 
-		impseg = NewImage.createImage("Image segmentee par PCM", width, height,
+		impseg = NewImage.createImage("Image segmentee par Davé", width, height,
 				1, 24, 0);
 		ipseg = impseg.getProcessor();
 		impseg.show();
@@ -124,6 +124,7 @@ public class Dave_Visa_Template implements PlugIn {
 		int rx, ry;
 		int x, y;
 		int epsilonx, epsilony;
+		double Unoise[] = new double[nbpixels];
 
 		// Initialisation des centroides (aleatoirement )
 
@@ -156,8 +157,8 @@ public class Dave_Visa_Template implements PlugIn {
 		// Initialisation des degres d'appartenance
 		// TODO A COMPLETER
 
-		for (i = 0; i < nbclasses; i++) {
-			for (j = 0; j < nbpixels; j++) {
+		for (j = 0; j < nbpixels; j++) {
+			for (i = 0; i < kmax; i++) {
 				Uprev[i][j] = 0;
 				for (k = 0; k < kmax; k++) {
 
@@ -203,17 +204,15 @@ public class Dave_Visa_Template implements PlugIn {
 
 					den += Math.pow(Uprev[i][j], m);
 				}
-
-				if (den > 0) {
-					c[i][0] = num[0] / den;
-					c[i][1] = num[1] / den;
-					c[i][2] = num[2] / den;
-				}
+				c[i][0] = num[0] / den;
+				c[i][1] = num[1] / den;
+				c[i][2] = num[2] / den;
 			}
 
 			// centroids
-			for (k = 0; k < kmax; k++) {
-				for (i = 0; i < nbpixels; i++) {
+			for (i = 0; i < nbpixels; i++) {
+				for (k = 0; k < kmax; k++) {
+				
 					double r2 = Math.pow(red[i] - c[k][0], 2);
 					double g2 = Math.pow(green[i] - c[k][1], 2);
 					double b2 = Math.pow(blue[i] - c[k][2], 2);
@@ -223,49 +222,43 @@ public class Dave_Visa_Template implements PlugIn {
 
 			for (i = 0; i < nbclasses; i++) {
 				for (j = 0; j < nbpixels; j++) {
-					double membership = 0.0;
-					for (k = 0; k < kmax; k++) {
-						if (Dmat[k][j] > 0) {
-							membership += Math.pow(Dmat[i][j]/Dmat[k][j], 2.0/(m-1));
-						} else {
-							membership += 1;
-						}
+					Umat[i][j] = 0.0;
+					Unoise[j] = 0.0;
+					for(k = 1 ; k < kmax ; k++){
+						if(Dmat[k][j] > 0)
+							Umat[i][j] += Math.pow( Dmat[i][j] / Dmat[k][j], (1/(m-1)) );
 					}
-					Umat[i][j] = 1/membership;
+					Umat[i][j] = 1.0/Umat[i][j];
+					Unoise[j] += Umat[i][j];
 				}
 			}
 
-			for (j = 0; j < nbpixels; j++) {
-				double membership = 0.0;
-				for (i = 0; i < nbclasses; i++) {
-					membership += Umat[i][j];
-				}
-				Umat[nbclasses - 1][j] = 1 - membership;
-			}
-
-
-			for (k = 0; k < kmax; k++) {
-				for (j = 0; j < nbpixels; j++) {
-					Dprev[k][j] = Dmat[k][j];
-					Uprev[k][j] = Umat[k][j];
+			double alpha = 0.0;
+			double nume = 0.0;
+			double lambda = 2.0;
+			for(i = 0 ; i < kmax ; i++){
+				for(j = 0 ; j < nbpixels ; j++){
+					Uprev[i][j] = Umat[i][j];
+					Dprev[i][j] = Dmat[i][j];
+					nume += Dmat[i][j];
 				}
 			}
+			alpha = lambda * (nume / (kmax * nbpixels));
+
+			// Calculate difference between the previous partition and the new partition (performance index)
+			for(i = 0 ; i < nbpixels; i++){
+				for(j = 0 ; j < kmax; j++){
+					figJ[iter] += Math.pow(Umat[j][i], m) * Dmat[j][i];
+				}
+				figJ[iter] += alpha * Math.pow(1 - Unoise[i], m);
+			}
+			if(iter > 0)
+				stab = Math.abs(figJ[iter] - figJ[iter-1]);
 
 			// Calculate difference between the previous partition and the new
 			// partition (performance index)
 
 			iter++;
-			
-			
-			for (j = 0; j < nbpixels; j++) {
-				for (k = 0; k < kmax; k++) {
-					figJ[iter] = Math.pow(Umat[k][j], m)
-							* Math.pow(Dmat[k][j], 2);
-				}
-			}
-			
-			if (iter > 0)
-				stab = figJ[iter] - figJ[iter - 1];
 			
 			// //////////////////////////////////////////////////////
 

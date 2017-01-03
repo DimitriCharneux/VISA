@@ -17,7 +17,7 @@ import javax.swing.JOptionPane;
  * m 1
  * nb ite 10
  * seuil 0.3
- * random 0
+ * random 1
  * 
  * */
 public class HCM_Visa_Template implements PlugIn {

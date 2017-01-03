@@ -17,7 +17,7 @@ import javax.swing.JOptionPane;
  * m 2
  * nb ite 10
  * seuil 0.2 à 0.8
- * random 0
+ * random 1
  * 
  * */
 public class FCM_Visa_Template implements PlugIn {
